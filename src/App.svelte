@@ -1,37 +1,77 @@
-<script lang="ts">
-    import svelteLogo from './assets/svelte.svg'
+<script>
     import Counter from './lib/Counter.svelte'
     import {onMount} from "svelte"
-    import { read } from 'feed-reader'
     import axios from "axios";
+    import * as rssParser from 'react-native-rss-parser';
+    import Masonry from 'svelte-bricks'
+    import Article from "./lib/Article.svelte";
+    import { createClient } from '@supabase/supabase-js'
+    import { styles } from './stores/stores.js';
 
-    async function fetchGamersPost() {
-        const res = await axios.post("https://iagdzpliocjxklsfazoy.functions.supabase.co/techraptor")
-        console.log(res)
-        console.log(res.data)
-        return;
-        read(res.data).then((feed) => {
-            console.log(feed)
-        }).catch((err) => {
-            console.log(err)
-        })
-    }
+    /**
+     * @type {DbArticle[]}
+     */
+    let articles = []
+    let [minColWidth, maxColWidth, gap] = [$styles.width, $styles.width, $styles.gap]
+    $: items = [...articles]
+
+    let page = 0
+    let perPage = 30
 
     onMount(async () => {
-        await fetchGamersPost()
+        await getMoreArticles()
     })
+
+    async function getMoreArticles(){
+        const supabase = createClient("https://iagdzpliocjxklsfazoy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhZ2R6cGxpb2NqeGtsc2Zhem95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTk4Nzk5NzgsImV4cCI6MTk3NTQ1NTk3OH0.NEMqTjZBKRXp3Xy0itRQltaovJz-FQVfyaRVV-phi0A")
+        const { from, to } = getPagination(page, perPage);
+        console.log(from)
+        console.log(to)
+        const { data, error } = await supabase
+            .from('articles')
+            .select()
+            .order("published", {ascending: false})
+            .range(from, to)
+        console.log(data)
+        console.log(error)
+
+        const newArticles = [...articles]
+
+        for (const d of data){
+            newArticles.push({
+                id: d.id,
+                created_at: new Date(d.created_at),
+                link: d.link,
+                author: d.author,
+                description: d.description.replace(/<br\/?[^>]+(>|$)/g, "").trim(),
+                published: new Date(d.published),
+                title: d.title,
+                website_id: d.website_id
+            })
+        }
+        articles = newArticles
+    }
+
+    function getPagination() {
+        const limit = perPage ? +perPage : 3
+        const from = page ? page * limit : 0
+        const to = page ? from + perPage - 1 : perPage - 1
+        return { from, to }
+    }
+
 </script>
 
 <main>
-    <div>
-        <a href="https://vitejs.dev" target="_blank">
-            <img src="/vite.svg" class="logo" alt="Vite Logo"/>
-        </a>
-        <a href="https://svelte.dev" target="_blank">
-            <img src={svelteLogo} class="logo svelte" alt="Svelte Logo"/>
-        </a>
-    </div>
     <h1>Vite + Svelte</h1>
+    <Masonry
+            {items}
+            {minColWidth}
+            {maxColWidth}
+            {gap}
+            let:item
+    >
+        <Article article={item}/>
+    </Masonry>
 
     <div class="card">
         <Counter/>
@@ -48,21 +88,5 @@
 </main>
 
 <style>
-    .logo {
-        height: 6em;
-        padding: 1.5em;
-        will-change: filter;
-    }
 
-    .logo:hover {
-        filter: drop-shadow(0 0 2em #646cffaa);
-    }
-
-    .logo.svelte:hover {
-        filter: drop-shadow(0 0 2em #ff3e00aa);
-    }
-
-    .read-the-docs {
-        color: #888;
-    }
 </style>
