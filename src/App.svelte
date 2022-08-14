@@ -1,12 +1,10 @@
 <script>
     import Counter from './lib/Counter.svelte'
     import {onMount} from "svelte"
-    import axios from "axios";
-    import * as rssParser from 'react-native-rss-parser';
     import Masonry from 'svelte-bricks'
     import Article from "./lib/Article.svelte";
-    import { createClient } from '@supabase/supabase-js'
-    import { styles } from './stores/stores.js';
+    import {createClient} from '@supabase/supabase-js'
+    import {styles, sites} from './stores/stores.js';
 
     /**
      * @type {DbArticle[]}
@@ -22,14 +20,19 @@
         await getMoreArticles()
     })
 
-    async function getMoreArticles(){
+    async function refreshArticles() {
+        page = 0
+        articles = []
+        await getMoreArticles()
+    }
+
+    async function getMoreArticles() {
         const supabase = createClient("https://iagdzpliocjxklsfazoy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhZ2R6cGxpb2NqeGtsc2Zhem95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTk4Nzk5NzgsImV4cCI6MTk3NTQ1NTk3OH0.NEMqTjZBKRXp3Xy0itRQltaovJz-FQVfyaRVV-phi0A")
-        const { from, to } = getPagination(page, perPage);
-        console.log(from)
-        console.log(to)
-        const { data, error } = await supabase
+        const {from, to} = getPagination(page, perPage);
+        const {data, error} = await supabase
             .from('articles')
             .select()
+            .in("website_id", $sites)
             .order("published", {ascending: false})
             .range(from, to)
         console.log(data)
@@ -37,7 +40,7 @@
 
         const newArticles = [...articles]
 
-        for (const d of data){
+        for (const d of data) {
             newArticles.push({
                 id: d.id,
                 created_at: new Date(d.created_at),
@@ -56,7 +59,7 @@
         const limit = perPage ? +perPage : 3
         const from = page ? page * limit : 0
         const to = page ? from + perPage - 1 : perPage - 1
-        return { from, to }
+        return {from, to}
     }
 
 </script>
@@ -64,10 +67,10 @@
 <main>
     <h1>Vite + Svelte</h1>
     <Masonry
-            {items}
-            {minColWidth}
-            {maxColWidth}
-            {gap}
+            items={articles}
+            minColWidth={minColWidth}
+            maxColWidth={maxColWidth}
+            gap={gap}
             let:item
     >
         <Article article={item}/>

@@ -15,7 +15,8 @@ const corsHeaders = {
 
 serve(async (req) => {
     try {
-        const techraptor = await fetchTechRaptor()
+        const techraptor = await fetchFeed("https://techraptor.net/feed")
+        const eurogamer = await fetchFeed("https://www.eurogamer.net/feed")
 
         const supabase = createClient(
             Deno.env.get('SUPABASE_URL') ?? '',
@@ -36,7 +37,8 @@ serve(async (req) => {
 
         // loop through new articles, and check if they exist in old
         const techRaptorArticles = getNewArticles(techraptor, 2, existingArticles)
-        const newArticles: DbArticle[] = [].concat(techRaptorArticles)
+        const eurogamerArticles = getNewArticles(eurogamer, 3, existingArticles)
+        const newArticles: DbArticle[] = [].concat(techRaptorArticles, eurogamerArticles)
 
         console.log("Found new articles: " + newArticles.length)
         console.log("INSERTING NEW DATA")
@@ -80,22 +82,28 @@ function getNewArticles(rssFeed: RssModel, siteId: number, existingArticles: DbA
             continue
         }
 
+        const now = new Date()
+        now.setDate(now.getDate() - 15)
+        if(new Date(article.published).getTime() <= now.getTime()){
+            continue // Skip article if it was not created withing the last 15 days
+        }
+
         newArticles.push({
             title: article.title,
             link: article.id,
             description: article.description,
             author: article.authors.map(a => a.name).join(", "),
             published: new Date(article.published),
-            website_id: 2
+            website_id: siteId
         })
     }
 
     return newArticles
 }
 
-async function fetchTechRaptor() {
+async function fetchFeed(url: string) {
     try {
-        const res = await fetch("https://techraptor.net/feed");
+        const res = await fetch(url);
         const text = await res.text()
         console.log(text)
         const parser = new Parser()

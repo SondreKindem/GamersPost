@@ -4,7 +4,10 @@ import { writable } from 'svelte/store';
 // TODO: width & gap needs complete reload of component, use #key thingy for that
 export const styles = writable({
     rounding: 5,
-    backgroundColor: "",
+    primaryColor: "",
+    secondaryColor: "",
     width: 560,
     gap: 15
 });
+
+export const sites = writable([3])
