@@ -9,7 +9,7 @@
 <div class="article">
     <h2 class="header"><a href={article.link}>{article.title}</a></h2>
     <span>{article.published.toLocaleString()}</span>
-    <div class="content" >
+    <div class="content">
         {@html article.description}
     </div>
 </div>
@@ -18,7 +18,7 @@
     .article {
         padding: 10px;
         min-height: 120px;
-        background-color: #747bff;
+        background-color: var(--articleBackground);
         border-radius: 5px;
     }
 

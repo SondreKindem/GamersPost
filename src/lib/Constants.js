@@ -1,0 +1,2 @@
+export const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhZ2R6cGxpb2NqeGtsc2Zhem95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTk4Nzk5NzgsImV4cCI6MTk3NTQ1NTk3OH0.NEMqTjZBKRXp3Xy0itRQltaovJz-FQVfyaRVV-phi0A"
+export const supabaseUrl = "https://iagdzpliocjxklsfazoy.supabase.co"

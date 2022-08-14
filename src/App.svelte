@@ -5,6 +5,8 @@
     import Article from "./lib/Article.svelte";
     import {createClient} from '@supabase/supabase-js'
     import {styles, sites} from './stores/stores.js';
+    import Sidebar from "./lib/Sidebar.svelte";
+    import {supabaseKey, supabaseUrl} from "./lib/Constants.js";
 
     /**
      * @type {DbArticle[]}
@@ -26,8 +28,14 @@
         await getMoreArticles()
     }
 
+    function settingsSaved(event) {
+        if(event.detail.sitesChanged){
+            refreshArticles()
+        }
+    }
+
     async function getMoreArticles() {
-        const supabase = createClient("https://iagdzpliocjxklsfazoy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhZ2R6cGxpb2NqeGtsc2Zhem95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTk4Nzk5NzgsImV4cCI6MTk3NTQ1NTk3OH0.NEMqTjZBKRXp3Xy0itRQltaovJz-FQVfyaRVV-phi0A")
+        const supabase = createClient(supabaseUrl, supabaseKey)
         const {from, to} = getPagination(page, perPage);
         const {data, error} = await supabase
             .from('articles')
@@ -65,6 +73,7 @@
 </script>
 
 <main>
+    <Sidebar on:save={settingsSaved}/>
     <h1>Vite + Svelte</h1>
     <Masonry
             items={articles}
