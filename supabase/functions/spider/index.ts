@@ -15,9 +15,6 @@ const corsHeaders = {
 
 serve(async (req) => {
     try {
-        const techraptor = await fetchFeed("https://techraptor.net/feed")
-        const eurogamer = await fetchFeed("https://www.eurogamer.net/feed")
-
         const supabase = createClient(
             Deno.env.get('SUPABASE_URL') ?? '',
             Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -36,9 +33,13 @@ serve(async (req) => {
         }
 
         // loop through new articles, and check if they exist in old
-        const techRaptorArticles = getNewArticles(techraptor, 2, existingArticles)
-        const eurogamerArticles = getNewArticles(eurogamer, 3, existingArticles)
-        const newArticles: DbArticle[] = [].concat(techRaptorArticles, eurogamerArticles)
+        const newArticles: DbArticle[] = [].concat(
+            await fetchAndParseFeed("https://techraptor.net/feed", 2, existingArticles),
+            await fetchAndParseFeed("https://www.eurogamer.net/feed", 3, existingArticles),
+            await fetchAndParseFeed("https://kotaku.com/rss", 4, existingArticles),
+            await fetchAndParseFeed("https://www.destructoid.com/feed", 5, existingArticles),
+            await fetchAndParseFeed("https://www.vg247.com/feed/", 6, existingArticles),
+        )
 
         console.log("Found new articles: " + newArticles.length)
         console.log("INSERTING NEW DATA")
@@ -72,6 +73,11 @@ serve(async (req) => {
         )
     }
 })
+
+async function fetchAndParseFeed(url: string, siteId: number, existingArticles: DbArticle[]){
+    const rawFeed = await fetchFeed(url)
+    return getNewArticles(rawFeed, siteId, existingArticles)
+}
 
 function getNewArticles(rssFeed: RssModel, siteId: number, existingArticles: DbArticle[]): DbArticle[] {
     const newArticles: DbArticle[] = []
