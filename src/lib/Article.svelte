@@ -22,7 +22,7 @@
         border-radius: 5px;
     }
 
-    :global(.content img) {
+    :global(.content *) {
         width: 100%!important;
         height: auto!important;
         border-radius: 3px;

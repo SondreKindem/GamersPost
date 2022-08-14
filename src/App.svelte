@@ -19,6 +19,10 @@
     let perPage = 30
 
     onMount(async () => {
+        const storedSites = localStorage.getItem("sites")
+        if (storedSites) {
+            $sites = JSON.parse(storedSites)
+        }
         await getMoreArticles()
     })
 
@@ -29,7 +33,7 @@
     }
 
     function settingsSaved(event) {
-        if(event.detail.sitesChanged){
+        if (event.detail.sitesChanged) {
             refreshArticles()
         }
     }

@@ -21,6 +21,7 @@
     })
 
     function saveClicked(){
+        localStorage.setItem("sites", JSON.stringify($sites))
         dispatch("save", {
             sitesChanged: sitesChanged
         })
