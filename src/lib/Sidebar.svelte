@@ -4,8 +4,10 @@
     import {createEventDispatcher, onMount} from "svelte";
     import {createClient} from "@supabase/supabase-js";
     import {supabaseKey, supabaseUrl} from "./Constants.js";
-    import Switch from "./Switch.svelte";
     import {sites} from "../stores/stores.js";
+    import CustomCheckbox from "./CustomCheckbox.svelte";
+    import CustomRadio from "./CustomRadio.svelte";
+    import {classicTheme, currentTheme, darkTheme, lightTheme, setTheme} from "./Theming.js";
 
     export let show = true;
 
@@ -15,26 +17,41 @@
     let websites = []
     let sitesChanged = false
     const dispatch = createEventDispatcher()
+    let theme = currentTheme
 
     onMount(async () => {
         websites = await loadSites()
     })
 
-    function saveClicked(){
+    function saveClicked() {
         localStorage.setItem("sites", JSON.stringify($sites))
         dispatch("save", {
             sitesChanged: sitesChanged
         })
     }
 
-    function websiteChanged(id){
-        if(!$sites.includes(id)){
+    function websiteChanged(id) {
+        if (!$sites.includes(id)) {
             $sites = [...$sites, id]
         } else {
             $sites = $sites.filter(s => s !== id)
         }
         sitesChanged = true
         console.log($sites)
+    }
+
+    function themeChanged(event) {
+        switch (event.detail.value) {
+            case "light":
+                setTheme(lightTheme)
+                break;
+            case "dark":
+                setTheme(darkTheme)
+                break;
+            case "classic":
+                setTheme(classicTheme)
+                break;
+        }
     }
 
     /**
@@ -53,13 +70,17 @@
 {#if show}
     <nav transition:fly={{x: -300, opacity: 1}}>
         <div class="inner-wrap">
-            <h2>Settings</h2>
+            <h2>Themes</h2>
+            <form>
+                <CustomRadio name="Classic" id="classic" checked={currentTheme==="classic"} on:change={themeChanged}/>
+                <CustomRadio name="Light" id="light" checked={currentTheme==="light"} on:change={themeChanged}/>
+                <CustomRadio name="Dark" id="dark" checked={currentTheme==="dark"} on:change={themeChanged}/>
+            </form>
 
+            <h2>Sources</h2>
             {#each websites as website}
-                <div style="display: flex; align-items: center; margin: 10px 0">
-                    <Switch id="{website.id}" checked={$sites.includes(website.id)} on:changed={() => websiteChanged(website.id)}/>
-                    <span style="margin-left: 20px">{website.name}</span>
-                </div>
+                <CustomCheckbox id="{website.id}" name="{website.name}" checked={$sites.includes(website.id)}
+                                on:changed={() => websiteChanged(website.id)}/>
             {/each}
 
             <button class="big-button" on:click={saveClicked}>Save</button>

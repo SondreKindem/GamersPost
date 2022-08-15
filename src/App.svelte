@@ -93,7 +93,7 @@
 
 <main>
     <Sidebar on:save={settingsSaved}/>
-    <h1>Vite + Svelte</h1>
+    <h1>The Gamer's Post</h1>
     <Masonry
             items={articles}
             minColWidth={minColWidth}

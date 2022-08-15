@@ -19,7 +19,8 @@
         padding: 10px;
         min-height: 120px;
         background-color: var(--articleBackground);
-        border-radius: 5px;
+        border-radius: var(--articleRadius);
+        border-bottom: var(--articleBorder)
     }
 
     :global(.content *) {
