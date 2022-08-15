@@ -188,7 +188,6 @@ function handleChecked(){
         line-height: 2em;
         font-weight: bold;
         color: #fff;
-        position: absolute;
         top: 0;
         left: 0;
         -webkit-backface-visibility: hidden;

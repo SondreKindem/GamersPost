@@ -1,5 +1,4 @@
 <script>
-    import Counter from './lib/Counter.svelte'
     import {onMount} from "svelte"
     import Masonry from 'svelte-bricks'
     import Article from "./lib/Article.svelte";
@@ -7,11 +6,14 @@
     import {styles, sites} from './stores/stores.js';
     import Sidebar from "./lib/Sidebar.svelte";
     import {supabaseKey, supabaseUrl} from "./lib/Constants.js";
+    import IntersectionObserver from "./lib/IntersectionObserver.svelte";
 
     /**
      * @type {DbArticle[]}
      */
     let articles = []
+    let loading = false
+    let endReached = false
     let [minColWidth, maxColWidth, gap] = [$styles.width, $styles.width, $styles.gap]
     $: items = [...articles]
 
@@ -38,7 +40,16 @@
         }
     }
 
+    async function getNextPage() {
+        if (!loading && !endReached) {
+            page += 1;
+            await getMoreArticles()
+            console.log("WOOO INTERSECT !")
+        }
+    }
+
     async function getMoreArticles() {
+        loading = true
         const supabase = createClient(supabaseUrl, supabaseKey)
         const {from, to} = getPagination(page, perPage);
         const {data, error} = await supabase
@@ -65,6 +76,10 @@
             })
         }
         articles = newArticles
+        loading = false
+        if (data.length < perPage) {
+            endReached = true;
+        }
     }
 
     function getPagination() {
@@ -89,9 +104,7 @@
         <Article article={item}/>
     </Masonry>
 
-    <div class="card">
-        <Counter/>
-    </div>
+    <IntersectionObserver on:intersect={getNextPage} let:intersecting top="800"/>
 
     <p>
         Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank">SvelteKit</a>, the official Svelte
