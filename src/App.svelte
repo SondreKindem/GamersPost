@@ -7,6 +7,7 @@
     import Sidebar from "./lib/Sidebar.svelte";
     import {supabaseKey, supabaseUrl} from "./lib/Constants.js";
     import IntersectionObserver from "./lib/IntersectionObserver.svelte";
+    import Header from "./lib/Header.svelte";
 
     /**
      * @type {DbArticle[]}
@@ -93,7 +94,7 @@
 
 <main>
     <Sidebar on:save={settingsSaved}/>
-    <h1>The Gamer's Post</h1>
+    <Header/>
     <Masonry
             items={articles}
             minColWidth={minColWidth}

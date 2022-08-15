@@ -31,6 +31,12 @@
     .content {
         text-align: left;
     }
+
+    .header {
+        font-size: 1.8rem;
+        line-height: 1.9rem;
+    }
+
     .header > a {
         color: inherit!important;
         text-decoration: inherit;
