@@ -2,7 +2,7 @@
 import {DOMParser} from "https://esm.sh/linkedom";
 import {RssParser} from "./RssParser.ts";
 import {AtomParser} from "./AtomParser.ts";
-import {RssModel, rssModel} from "./Helpers.ts";
+import {RssModel} from "./Helpers.ts";
 
 export class Parser {
     getParser(document) {

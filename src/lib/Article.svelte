@@ -1,14 +1,24 @@
 <script>
+    import {createEventDispatcher} from "svelte";
 
-    /**
-     * @type {DbArticle}
-     */
+    /** @type {DbArticle} */
     export let article;
+
+    const dispatch = createEventDispatcher()
+
+    function onImageLoad() {
+        dispatch("load")
+    }
 </script>
 
 <div class="article">
-    <h2 class="header"><a href={article.link}>{article.title}</a></h2>
+    <h2 class="header"><a href={article.link} target="_blank">{article.title}</a></h2>
     <span>{article.published.toLocaleString()}</span>
+    {#if article.image}
+        <a href={article.link} target="_blank">
+            <img class="image" alt="article image" src="{article.image}" on:load={onImageLoad}/>
+        </a>
+    {/if}
     <div class="content">
         {@html article.description}
     </div>
@@ -23,11 +33,18 @@
         border-bottom: var(--articleBorder)
     }
 
-    :global(.content *) {
-        width: 100%!important;
-        height: auto!important;
+    .image {
+        width: 100% !important;
+        height: auto !important;
         border-radius: 3px;
     }
+
+    :global(.content *) {
+        width: 100% !important;
+        height: auto !important;
+        border-radius: 3px;
+    }
+
     .content {
         text-align: left;
     }
@@ -38,8 +55,12 @@
     }
 
     .header > a {
-        color: inherit!important;
+        color: inherit !important;
         text-decoration: inherit;
         font-weight: inherit;
+    }
+
+    .header > a:hover {
+        color: #a63532 !important;
     }
 </style>

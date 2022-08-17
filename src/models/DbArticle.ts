@@ -6,5 +6,6 @@ export type DbArticle = {
     description: string,
     author: string,
     published: Date,
-    website_id: number
+    website_id: number,
+    image: string,
 }

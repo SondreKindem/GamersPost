@@ -42,6 +42,7 @@ serve(async (req) => {
         )
 
         console.log("Found new articles: " + newArticles.length)
+        console.log(newArticles.map(a => a.image))
         console.log("INSERTING NEW DATA")
 
         const {data: insertData, error: insertError} = await supabase
@@ -75,32 +76,43 @@ serve(async (req) => {
 })
 
 async function fetchAndParseFeed(url: string, siteId: number, existingArticles: DbArticle[]){
-    const rawFeed = await fetchFeed(url)
-    return getNewArticles(rawFeed, siteId, existingArticles)
+    try {
+        const rawFeed = await fetchFeed(url)
+        return getNewArticles(rawFeed, siteId, existingArticles)
+    }
+    catch(e) {
+        console.log("Failed to fetch for site: " + siteId)
+        console.log(e.message)
+        console.log(e.stack)
+        return []
+    }
 }
 
 function getNewArticles(rssFeed: RssModel, siteId: number, existingArticles: DbArticle[]): DbArticle[] {
     const newArticles: DbArticle[] = []
     console.log("PARSING ARTICLES")
+    const now = new Date()
+    now.setDate(now.getDate() - 15)
+    const timeNow = now.getTime()
+
     for (const article of rssFeed.items) {
-        if (existingArticles.some(a => a.link === article.id && new Date(a.published).getTime() === new Date(article.published).getTime())) {
+        if (existingArticles.some(a => a.link === article.links[0].url && new Date(a.published).getTime() === new Date(article.published).getTime())) {
             // Already exists, skip this one
             continue
         }
 
-        const now = new Date()
-        now.setDate(now.getDate() - 15)
-        if(new Date(article.published).getTime() <= now.getTime()){
+        if(new Date(article.published).getTime() <= timeNow){
             continue // Skip article if it was not created withing the last 15 days
         }
 
         newArticles.push({
             title: article.title,
-            link: article.id,
-            description: article.description,
+            link: article.links[0].url,
+            description: article.description.replace(/(<img|<br) .*?>/g,""),
             author: article.authors.map(a => a.name).join(", "),
             published: new Date(article.published),
-            website_id: siteId
+            website_id: siteId,
+            image: article.imageUrl
         })
     }
 
@@ -111,7 +123,6 @@ async function fetchFeed(url: string) {
     try {
         const res = await fetch(url);
         const text = await res.text()
-        console.log(text)
         const parser = new Parser()
         return await parser.parse(text)
     } catch (e: Error) {

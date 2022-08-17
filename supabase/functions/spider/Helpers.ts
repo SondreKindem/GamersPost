@@ -73,6 +73,7 @@ export type DbArticle = {
     description: string,
     author: string,
     published: Date,
+    image: string,
     website_id: number
 }
 
@@ -144,6 +145,7 @@ export const rssModel = {
                     rel: undefined,
                 },
             ],
+            image: undefined,
             id: undefined,
             imageUrl: undefined,
             description: undefined,
@@ -188,9 +190,14 @@ export const rssModel = {
 export class Namespaces {
     static itunes = 'http://www.itunes.com/dtds/podcast-1.0.dtd';
     static content = 'http://purl.org/rss/1.0/modules/content/';
+    static media = "http://search.yahoo.com/mrss/"
 }
 
 export class Utils {
+    static decodeHtmlEntity = (str) => {
+        return str.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec));
+    };
+
     static getElements = (node, tagName) => {
         if (!node || !node.getElementsByTagName(tagName)) {
             return [];

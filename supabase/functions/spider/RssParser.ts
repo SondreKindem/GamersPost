@@ -134,6 +134,20 @@ export class RssParser {
         }));
     };
 
+    getItemImage(node) {
+        const mediaContent = node.getElementsByTagName("media:content")
+        if(mediaContent && mediaContent.length > 0){
+            return mediaContent[0].getAttribute("url")
+        } else {
+            const desc = node.getElementsByTagName("description")[0].innerText
+            const match = desc.match(/src=["|'](.+?[\.jpg|\.gif|\.png|\.jpeg])["|']/i)
+            if(match) {
+                return match[1]
+            }
+        }
+        return null
+    }
+
     private mapChannelFields(document) {
         const channelNodes = Utils.getElements(document, 'channel');
 
@@ -169,7 +183,8 @@ export class RssParser {
             authors: this.getItemAuthors(item),
             categories: this.getItemCategories(item),
             published: this.getItemPublished(item),
-            enclosures: this.getItemEnclosures(item)
+            enclosures: this.getItemEnclosures(item),
+            imageUrl: this.getItemImage(item)
         }));
     };
 

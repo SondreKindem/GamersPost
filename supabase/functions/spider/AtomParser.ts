@@ -159,6 +159,7 @@ export class AtomParser {
             categories: this.getItemCategories(item),
             published: this.getItemPublished(item),
             enclosures: this.getItemEnclosures(item),
+            image: null
         }));
     };
 
