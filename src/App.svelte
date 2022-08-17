@@ -8,8 +8,8 @@
     import Header from "./lib/Header.svelte";
     import CustomMasonry from "./lib/CustomMasonry.svelte";
     import {DOMParser} from "https://esm.sh/linkedom";
-    import {Utils} from "../supabase/functions/spider/Helpers.ts";
     import {onMount} from "svelte";
+    import Bricks from 'bricks.js'
 
     /**
      * @type {DbArticle[]}
@@ -22,13 +22,30 @@
     let page = 0
     let perPage = 30
 
-    let refreshLayout
+    let bricksWrapper
+    let bricksInstance
+
+    const sizes = [
+        {columns: 1, gutter: 10},
+        {mq: '550px', columns: 1, gutter: 10},
+        {mq: '1040px', columns: 2, gutter: 10},
+        {mq: '1624px', columns: 3, gutter: 10},
+        {mq: '2340px', columns: 4, gutter: 10},
+    ]
 
     onMount(async () => {
         const storedSites = localStorage.getItem("sites")
         if (storedSites) {
             $sites = JSON.parse(storedSites)
         }
+
+        bricksInstance = Bricks({
+            container: "#bricks",
+            packed: 'data-packed',
+            sizes: sizes
+        })
+        bricksInstance.resize(true)
+
         await getMoreArticles()
 
         /*const document = new DOMParser({
@@ -128,7 +145,6 @@ Sapiens is an ambitious indie life simulator set on a massive scale, but is that
         if (data.length < perPage) {
             endReached = true;
         }
-        //refreshLayout()
     }
 
     function getPagination() {
@@ -140,28 +156,42 @@ Sapiens is an ambitious indie life simulator set on a massive scale, but is that
 
 </script>
 
-<main>
+<main class="main-wrap">
     <Sidebar on:save={settingsSaved}/>
+
     <Header/>
-    <CustomMasonry gridGap={'0.75rem'} colWidth={'minmax(Min(36em, 100%), 1fr)'} items={articles} bind:refreshLayout={refreshLayout}>
+
+    <div bind:this={bricksWrapper} id="bricks" class="bricks-wrap">
         {#each articles as article}
-            <Article article={article} on:load={refreshLayout}/>
+            <Article article={article} on:load={() => bricksInstance.pack()}/>
         {/each}
-    </CustomMasonry>
+    </div>
 
     <IntersectionObserver on:intersect={getNextPage} let:intersecting top="800"/>
 
     <p>
-        <button on:click={refreshLayout}>refresh layout</button>
         Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank">SvelteKit</a>, the official Svelte
         app framework powered by Vite!
     </p>
 
-    <p class="read-the-docs">
-        Click on the Vite and Svelte logos to learn more
-    </p>
 </main>
 
 <style>
+    .main-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
+    .bricks-wrap {
+        margin-left: 0;
+        margin-right: 0;
+
+    }
+
+    @media screen and (max-width: 530px) {
+        .bricks-wrap {
+            width: 90vw !important;
+        }
+    }
 </style>

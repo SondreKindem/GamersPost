@@ -33,9 +33,13 @@
 </header>
 
 <style>
+    header {
+        max-width: 520px;
+    }
+
     .header-hr {
         border: 0;
-        border-bottom: 1.2em solid var(--textColor);
+        border-bottom: .7em solid var(--textColor);
         margin-bottom: 13.33333333px;
         margin-top: 8px;
     }
@@ -46,17 +50,29 @@
         fill: var(--textColor);
     }
 
-    @media screen and (min-width: 1731px) and (max-width: 2399px) {
+    @media screen and (min-width: 1040px) {
+        header {
+            width: 1050px;
+            max-width: unset;
+        }
+    }
+
+    @media screen and (min-width: 1624px) {
         .header-hr {
             margin-top: 1.25em;
             margin-bottom: 1.5em;
             border-bottom: 1em solid var(--textColor);
         }
-    }
 
-    @media screen and (min-width: 1731px) and (max-width: 2399px){
         header {
             width: 98.125em;
         }
     }
+
+    @media screen and (min-width: 2340px) {
+        header {
+            width: 2110px;
+        }
+    }
+
 </style>

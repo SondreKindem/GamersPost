@@ -9,7 +9,7 @@
     import CustomRadio from "./CustomRadio.svelte";
     import {classicTheme, currentTheme, darkTheme, lightTheme, setTheme} from "./Theming.js";
 
-    export let show = true;
+    export let show = false;
 
     /**
      * @type {DbWebsite[]}

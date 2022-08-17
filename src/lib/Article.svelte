@@ -28,9 +28,18 @@
     .article {
         padding: 10px;
         min-height: 120px;
+        width: 90vw;
+        margin: auto;
         background-color: var(--articleBackground);
         border-radius: var(--articleRadius);
         border-bottom: var(--articleBorder)
+    }
+
+    @media screen and (min-width: 531px) {
+        .article {
+            width: 500px;
+            margin: 0;
+        }
     }
 
     .image {
