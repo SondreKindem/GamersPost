@@ -54,6 +54,10 @@
         border-radius: 3px;
     }
 
+    :global(.content h2) {
+        font-size: 1.2em;
+    }
+
     .content {
         text-align: left;
     }

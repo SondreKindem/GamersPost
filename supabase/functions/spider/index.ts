@@ -42,8 +42,6 @@ serve(async (req) => {
         )
 
         console.log("Found new articles: " + newArticles.length)
-        console.log(newArticles.map(a => a.image))
-        console.log("INSERTING NEW DATA")
 
         const {data: insertData, error: insertError} = await supabase
             .from('articles')

@@ -6,7 +6,6 @@
     import {supabaseKey, supabaseUrl} from "./lib/Constants.js";
     import IntersectionObserver from "./lib/IntersectionObserver.svelte";
     import Header from "./lib/Header.svelte";
-    import CustomMasonry from "./lib/CustomMasonry.svelte";
     import {DOMParser} from "https://esm.sh/linkedom";
     import {onMount} from "svelte";
     import Bricks from 'bricks.js'
@@ -169,9 +168,8 @@ Sapiens is an ambitious indie life simulator set on a massive scale, but is that
 
     <IntersectionObserver on:intersect={getNextPage} let:intersecting top="800"/>
 
-    <p>
-        Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank">SvelteKit</a>, the official Svelte
-        app framework powered by Vite!
+    <p style="margin-top: 50px">
+        <a href="https://github.com/sondrekindem/gamerspost" target="_blank">[Source]</a>
     </p>
 
 </main>
