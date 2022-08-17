@@ -27,7 +27,7 @@
     const sizes = [
         {columns: 1, gutter: 10},
         {mq: '550px', columns: 1, gutter: 10},
-        {mq: '1040px', columns: 2, gutter: 10},
+        {mq: '1070px', columns: 2, gutter: 10},
         {mq: '1624px', columns: 3, gutter: 10},
         {mq: '2340px', columns: 4, gutter: 10},
     ]

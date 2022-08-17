@@ -50,7 +50,7 @@
         fill: var(--textColor);
     }
 
-    @media screen and (min-width: 1040px) {
+    @media screen and (min-width: 1070px) {
         header {
             width: 1050px;
             max-width: unset;

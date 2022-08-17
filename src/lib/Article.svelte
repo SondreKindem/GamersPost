@@ -34,6 +34,7 @@
     <div class="content">
         {@html article.description}
     </div>
+    <div class="article-border"></div>
 </div>
 
 <style>
@@ -43,6 +44,10 @@
         width: 90vw;
         margin: auto;
         background-color: var(--articleBackground);
+    }
+
+    .article-border {
+        height: 15px;
         border-radius: var(--articleRadius);
         border-bottom: var(--articleBorder)
     }
@@ -83,6 +88,7 @@
         font-size: 1.8rem;
         line-height: 1.9rem;
         margin-bottom: 5px;
+        margin-top: 10px;
     }
 
     .header > a {
