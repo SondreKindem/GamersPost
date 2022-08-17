@@ -6,7 +6,6 @@
     import {supabaseKey, supabaseUrl} from "./lib/Constants.js";
     import IntersectionObserver from "./lib/IntersectionObserver.svelte";
     import Header from "./lib/Header.svelte";
-    import {DOMParser} from "https://esm.sh/linkedom";
     import {onMount} from "svelte";
     import Bricks from 'bricks.js'
 
@@ -115,10 +114,8 @@ Sapiens is an ambitious indie life simulator set on a massive scale, but is that
         await getMoreArticles()
     }
 
-    function settingsSaved(event) {
-        if (event.detail.sitesChanged) {
-            refreshArticles()
-        }
+    function settingsSaved() {
+        refreshArticles()
     }
 
     async function getNextPage() {

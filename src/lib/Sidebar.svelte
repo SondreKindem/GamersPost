@@ -1,7 +1,7 @@
 <script>
     import {fly, fade} from 'svelte/transition';
     import Hamburger from "./Hamburger.svelte";
-    import {createEventDispatcher, onMount} from "svelte";
+    import {createEventDispatcher} from "svelte";
     import {sites, websites} from "../stores/stores.js";
     import CustomCheckbox from "./CustomCheckbox.svelte";
     import CustomRadio from "./CustomRadio.svelte";
@@ -9,22 +9,34 @@
 
     export let show = false;
 
-    /**
-     * @type {DbWebsite[]}
-     */
     let sitesChanged = false
+    let sitesSaved = false
     const dispatch = createEventDispatcher()
     let theme = currentTheme
+    let selectedSitesOnOpen = [...$sites]
 
-    onMount(async () => {
+    function toggleOpen() {
+        show = !show;
+        if (show === true) {
+            // Save the state as it was on sidebar open
+            selectedSitesOnOpen = [...$sites]
+        } else if (!sitesSaved) {
+            resetSelection()
+        }
+        sitesSaved = false
+    }
 
-    })
+    function resetSelection() {
+        sites.update(() => selectedSitesOnOpen)
+    }
 
     function saveClicked() {
         localStorage.setItem("sites", JSON.stringify($sites))
         dispatch("save", {
             sitesChanged: sitesChanged
         })
+        sitesSaved = true
+        toggleOpen()
     }
 
     function websiteChanged(id) {
@@ -52,7 +64,7 @@
     }
 </script>
 
-<Hamburger bind:open={show}/>
+<Hamburger bind:open={show} on:change={toggleOpen}/>
 {#if show}
     <nav transition:fly={{x: -300, opacity: 1}}>
         <div class="inner-wrap">
@@ -72,7 +84,7 @@
             <button class="big-button" on:click={saveClicked}>Save</button>
         </div>
     </nav>
-    <div class="overlay" on:click={() => show = !show} transition:fade={{duration: 120}}></div>
+    <div class="overlay" on:click={toggleOpen} transition:fade={{duration: 120}}></div>
 {/if}
 
 <style>
