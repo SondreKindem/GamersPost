@@ -2,9 +2,7 @@
     import {fly, fade} from 'svelte/transition';
     import Hamburger from "./Hamburger.svelte";
     import {createEventDispatcher, onMount} from "svelte";
-    import {createClient} from "@supabase/supabase-js";
-    import {supabaseKey, supabaseUrl} from "./Constants.js";
-    import {sites} from "../stores/stores.js";
+    import {sites, websites} from "../stores/stores.js";
     import CustomCheckbox from "./CustomCheckbox.svelte";
     import CustomRadio from "./CustomRadio.svelte";
     import {classicTheme, currentTheme, darkTheme, lightTheme, setTheme} from "./Theming.js";
@@ -14,13 +12,12 @@
     /**
      * @type {DbWebsite[]}
      */
-    let websites = []
     let sitesChanged = false
     const dispatch = createEventDispatcher()
     let theme = currentTheme
 
     onMount(async () => {
-        websites = await loadSites()
+
     })
 
     function saveClicked() {
@@ -53,17 +50,6 @@
                 break;
         }
     }
-
-    /**
-     * @returns {Promise<DbWebsite[]>}
-     */
-    async function loadSites() {
-        const supabase = createClient(supabaseUrl, supabaseKey)
-        const {data, error} = await supabase
-            .from('websites')
-            .select()
-        return data ?? []
-    }
 </script>
 
 <Hamburger bind:open={show}/>
@@ -78,7 +64,7 @@
             </form>
 
             <h2>Sources</h2>
-            {#each websites as website}
+            {#each Object.entries($websites) as [key, website]}
                 <CustomCheckbox id="{website.id}" name="{website.name}" checked={$sites.includes(website.id)}
                                 on:changed={() => websiteChanged(website.id)}/>
             {/each}

@@ -1,7 +1,7 @@
 <script>
     import Article from "./lib/Article.svelte";
     import {createClient} from '@supabase/supabase-js'
-    import {sites} from './stores/stores.js';
+    import {sites, websites} from './stores/stores.js';
     import Sidebar from "./lib/Sidebar.svelte";
     import {supabaseKey, supabaseUrl} from "./lib/Constants.js";
     import IntersectionObserver from "./lib/IntersectionObserver.svelte";
@@ -37,6 +37,8 @@
         if (storedSites) {
             $sites = JSON.parse(storedSites)
         }
+
+        await fetchAvailableWebsites()
 
         bricksInstance = Bricks({
             container: "#bricks",
@@ -92,6 +94,21 @@ Sapiens is an ambitious indie life simulator set on a massive scale, but is that
         }*/
     })
 
+    async function fetchAvailableWebsites() {
+        const supabase = createClient(supabaseUrl, supabaseKey)
+        const {data, error} = await supabase
+            .from('websites')
+            .select()
+
+        if (data) {
+            const foundWebsites = {}
+            for (const site of data) {
+                foundWebsites[site.id] = site
+            }
+            websites.update(() => foundWebsites)
+        }
+    }
+
     async function refreshArticles() {
         page = 0
         articles = []
@@ -105,6 +122,7 @@ Sapiens is an ambitious indie life simulator set on a massive scale, but is that
     }
 
     async function getNextPage() {
+        console.log("next page plssss")
         if (!loading && !endReached) {
             page += 1;
             await getMoreArticles()
@@ -143,6 +161,7 @@ Sapiens is an ambitious indie life simulator set on a massive scale, but is that
         loading = false
         if (data.length < perPage) {
             endReached = true;
+            console.log("reached end")
         }
     }
 
@@ -161,12 +180,16 @@ Sapiens is an ambitious indie life simulator set on a massive scale, but is that
     <Header/>
 
     <div bind:this={bricksWrapper} id="bricks" class="bricks-wrap">
-        {#each articles as article}
-            <Article article={article} on:load={() => bricksInstance.pack()}/>
-        {/each}
+        {#if bricksInstance !== undefined}
+            {#each articles as article}
+                <Article article={article} on:load={() => bricksInstance.pack()}/>
+            {/each}
+        {/if}
     </div>
 
-    <IntersectionObserver on:intersect={getNextPage} let:intersecting top="800"/>
+    {#if articles.length > 0}
+        <IntersectionObserver on:intersect={getNextPage} let:intersecting top="800"/>
+    {/if}
 
     <p style="margin-top: 50px">
         <a href="https://github.com/sondrekindem/gamerspost" target="_blank">[Source]</a>

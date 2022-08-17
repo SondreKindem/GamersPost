@@ -1,10 +1,19 @@
 <script>
-    import {createEventDispatcher} from "svelte";
+    import {createEventDispatcher, onMount} from "svelte";
+    import TimeAgo from 'javascript-time-ago'
+    import {websites} from "../stores/stores.js";
 
     /** @type {DbArticle} */
     export let article;
 
+    let timeAgo = ""
+
     const dispatch = createEventDispatcher()
+
+    onMount(() => {
+        const timeAgoFormatter = new TimeAgo('en-US')
+        timeAgo = timeAgoFormatter.format(article.published)
+    })
 
     function onImageLoad() {
         dispatch("load")
@@ -13,7 +22,10 @@
 
 <div class="article">
     <h2 class="header"><a href={article.link} target="_blank">{article.title}</a></h2>
-    <span>{article.published.toLocaleString()}</span>
+    <div class="info-row">
+        <b>{$websites[article.website_id]?.name}</b>
+        <span>{timeAgo}</span>
+    </div>
     {#if article.image}
         <a href={article.link} target="_blank">
             <img class="image" alt="article image" src="{article.image}" on:load={onImageLoad}/>
@@ -33,6 +45,11 @@
         background-color: var(--articleBackground);
         border-radius: var(--articleRadius);
         border-bottom: var(--articleBorder)
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
     }
 
     @media screen and (min-width: 531px) {
@@ -65,6 +82,7 @@
     .header {
         font-size: 1.8rem;
         line-height: 1.9rem;
+        margin-bottom: 5px;
     }
 
     .header > a {

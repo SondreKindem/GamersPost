@@ -18,6 +18,7 @@
     "@supabase/supabase-js": "^1.35.6",
     "axios": "^0.27.2",
     "bricks.js": "^1.8.0",
+    "javascript-time-ago": "^2.5.7",
     "svelte-bricks": "^0.1.7"
   }
 }

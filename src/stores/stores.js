@@ -11,3 +11,6 @@ export const styles = writable({
 });
 
 export const sites = writable([3])
+
+/** @type {Writable<{int: DbWebsite}>} */
+export const websites = writable({})
