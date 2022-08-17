@@ -44,11 +44,11 @@
         width: 90vw;
         margin: auto;
         background-color: var(--articleBackground);
+        border-radius: var(--articleRadius);
     }
 
     .article-border {
         height: 15px;
-        border-radius: var(--articleRadius);
         border-bottom: var(--articleBorder)
     }
 
