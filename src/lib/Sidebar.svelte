@@ -81,7 +81,7 @@
                                 on:changed={() => websiteChanged(website.id)}/>
             {/each}
 
-            <button class="big-button" on:click={saveClicked}>Save</button>
+            <button id="save-button" class="big-button" on:click={saveClicked}>Save</button>
         </div>
     </nav>
     <div class="overlay" on:click={toggleOpen} transition:fade={{duration: 120}}></div>
@@ -103,7 +103,24 @@
     .inner-wrap {
         position: relative;
         margin: 2rem 1rem 0.6rem;
-        padding-bottom: 80px;
+        padding-bottom: 15px;
+    }
+
+    #save-button {
+        position: sticky;
+        bottom: 10px;
+        z-index: 999;
+        margin-left: 80px;
+        margin-right: -2px;
+        width: 220px!important;
+        background-color: var(--primaryColor)!important;
+    }
+    #save-button:hover {
+        position: sticky;
+        bottom: 10px;
+        z-index: 999;
+        margin-left: 80px;
+        background-color: #7e004b !important;
     }
 
     .overlay {
