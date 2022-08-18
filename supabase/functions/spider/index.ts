@@ -46,6 +46,14 @@ serve(async (req) => {
             await fetchAndParseFeed("https://www.rockpapershotgun.com/feed", 10, existingArticles),
             await fetchAndParseFeed("https://www.gameinformer.com/feeds/thefeedrss.aspx", 11, existingArticles),
             await fetchAndParseFeed("https://www.pcgamer.com/rss/", 1, existingArticles),
+            await fetchAndParseFeed("https://www.engadget.com/rss.xml", 12, existingArticles),
+            await fetchAndParseFeed("https://www.pcgamesn.com/mainrss.xml", 13, existingArticles),
+            await fetchAndParseFeed("https://www.dualshockers.com/feed/rss", 14, existingArticles),
+            await fetchAndParseFeed("https://nichegamer.com/feed/", 15, existingArticles),
+            await fetchAndParseFeed("https://www.siliconera.com/feed/", 16, existingArticles),
+            await fetchAndParseFeed("https://www.gamesindustry.biz/feed", 17, existingArticles),
+            await fetchAndParseFeed("https://stevivor.com/feed", 18, existingArticles),
+            await fetchAndParseFeed("https://gamerant.com/feed/", 19, existingArticles),
         )
 
         console.log("Found new articles: " + newArticles.length)
@@ -143,7 +151,7 @@ function parsePcGamer(article) {
     if (document) {
         // Limit amount of elements allowed in body, prevent entire article from being displayed
         document.getElementsByTagName("article")[0].childNodes.forEach((el, idx) => {
-            if (idx > 5) {
+            if (idx > 4) {
                 el.remove()
             }
         })
