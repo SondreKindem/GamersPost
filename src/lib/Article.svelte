@@ -71,9 +71,28 @@
     }
 
     :global(.content *) {
+
+        border-radius: 3px;
+        position: relative!important;
+        word-wrap: anywhere;
+    }
+
+    :global(.content *) {
+        width: 100% !important;
+        overflow: hidden;
+    }
+
+    :global(.content iframe) {
         width: 100% !important;
         height: auto !important;
-        border-radius: 3px;
+    }
+
+    :global(.content li, .content ul) {
+        width: auto!important;
+    }
+
+    :global(.content > * > *) {
+        padding: 0!important;
     }
 
     :global(.content h2) {
