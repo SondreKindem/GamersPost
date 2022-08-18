@@ -77,9 +77,11 @@
         word-wrap: anywhere;
     }
 
-    :global(.content *) {
+    :global(.content > *) {
         width: 100% !important;
         overflow: hidden;
+        margin-left: 0;
+        margin-right: 0;
     }
 
     :global(.content iframe) {

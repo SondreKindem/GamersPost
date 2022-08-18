@@ -140,6 +140,7 @@ Wordle today: The solution and a hint for Thursday's puzzle.
     }
 
     function settingsSaved() {
+        window.scrollTo(0, 0);
         refreshArticles()
     }
 
@@ -185,6 +186,7 @@ Wordle today: The solution and a hint for Thursday's puzzle.
             endReached = true;
             console.log("reached end")
         }
+        setTimeout(() => bricksInstance.pack(), 50)
     }
 
     function getPagination() {

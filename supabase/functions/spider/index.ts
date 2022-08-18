@@ -47,8 +47,8 @@ serve(async (req) => {
             await fetchAndParseFeed("https://www.gameinformer.com/feeds/thefeedrss.aspx", 11, existingArticles),
             await fetchAndParseFeed("https://www.pcgamer.com/rss/", 1, existingArticles),
             await fetchAndParseFeed("https://www.engadget.com/rss.xml", 12, existingArticles),
-            await fetchAndParseFeed("https://www.pcgamesn.com/mainrss.xml", 13, existingArticles),
-            await fetchAndParseFeed("https://www.dualshockers.com/feed/rss", 14, existingArticles),
+            await fetchAndParseFeed("https://www.pcgamesn.com/mainrss.xml", 13, existingArticles), // TODO: Duplicate articles
+            await fetchAndParseFeed("https://www.dualshockers.com/feed/rss", 14, existingArticles), // TODO: No images
             await fetchAndParseFeed("https://nichegamer.com/feed/", 15, existingArticles),
             await fetchAndParseFeed("https://www.siliconera.com/feed/", 16, existingArticles),
             await fetchAndParseFeed("https://www.gamesindustry.biz/feed", 17, existingArticles),
