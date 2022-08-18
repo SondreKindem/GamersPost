@@ -66,7 +66,7 @@
 
 <Hamburger bind:open={show} on:change={toggleOpen}/>
 {#if show}
-    <nav transition:fly={{x: -300, opacity: 1}}>
+    <nav transition:fly={{x: -350, opacity: 1}}>
         <div class="inner-wrap">
             <h2>Themes</h2>
             <form>
@@ -95,7 +95,7 @@
         height: 100%;
         background: var(--background);
         overflow-y: auto;
-        width: 300px;
+        width: 350px;
         z-index: 800;
         border-right: 1px solid #aaa;
     }
