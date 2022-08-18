@@ -177,8 +177,8 @@ Wordle today: The solution and a hint for Thursday's puzzle.
                 published: new Date(d.published),
                 title: d.title,
                 website_id: d.website_id,
-                image: d.image
-            })
+                image: d.website_id === 14 ? "https://sonkin.no/thegamerspost/proxy/proxy.php?url=" + d.image : d.image
+             })
         }
         articles = newArticles
         loading = false
