@@ -88,7 +88,7 @@ export class RssParser {
     }
 
     getItemContent(node) {
-        return Utils.getElementTextContent(node, 'encoded', Namespaces.content);
+        return Utils.getElementTextContent(node, 'content:encoded', Namespaces.content);
     }
 
     getItemAuthors(node) {
@@ -135,16 +135,25 @@ export class RssParser {
     };
 
     getItemImage(node) {
+        // Try to find media:content
         const mediaContent = node.getElementsByTagName("media:content")
-        if(mediaContent && mediaContent.length > 0){
+        if (mediaContent && mediaContent.length > 0) {
             return mediaContent[0].getAttribute("url")
-        } else {
-            const desc = node.getElementsByTagName("description")[0].innerText
-            const match = desc.match(/src=["|'](.+?[\.jpg|\.gif|\.png|\.jpeg])["|']/i)
-            if(match) {
-                return match[1]
-            }
         }
+
+        // Try to find enclosure tag
+        const enclosure = node.getElementsByTagName("enclosure")
+        if (enclosure && enclosure.length > 0) {
+            return enclosure[0].getAttribute("url")
+        }
+
+        // Try to find image in description
+        const desc = node.getElementsByTagName("description")[0].innerText
+        const match = desc.match(/src=["|'](.+?[\.jpg|\.gif|\.png|\.jpeg])["|']/i)
+        if (match) {
+            return match[1]
+        }
+
         return null
     }
 

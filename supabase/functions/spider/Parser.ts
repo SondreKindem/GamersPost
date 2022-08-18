@@ -12,12 +12,10 @@ export class Parser {
             document.getElementsByTagName('feed')[0] !== undefined;
 
         if (isRssSpecification) {
-            console.log("RSS PARSER")
             return new RssParser();
         }
 
         if (isAtomSpecification) {
-            console.log("ATOM PARSER")
             return new AtomParser();
         }
 
@@ -25,7 +23,6 @@ export class Parser {
     };
 
     public parse(feed): Promise<RssModel> {
-        console.log("Attempt parse")
         return new Promise((resolve, reject) => {
             const document = new DOMParser({
                 errorHandler: (_level, msg) => {

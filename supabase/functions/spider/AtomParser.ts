@@ -80,7 +80,32 @@ export class AtomParser {
 
     getItemContent = (node) => Utils.getElementTextContent(node, 'content');
 
-    getItemImage = (node) => Utils.getElementTextContent(node, 'icon');
+    getItemImage = (node) => {
+        const icon = Utils.getElementTextContent(node, 'icon')
+        if(icon)
+            return icon
+
+        // Try to find media:content
+        const mediaContent = node.getElementsByTagName("media:content")
+        if (mediaContent && mediaContent.length > 0) {
+            return mediaContent[0].getAttribute("url")
+        }
+
+        // Try to find enclosure tag
+        const enclosure = node.getElementsByTagName("enclosure")
+        if (enclosure && enclosure.length > 0) {
+            return enclosure[0].getAttribute("url")
+        }
+
+        // Try to find image in content
+        const desc = node.getElementsByTagName("content")[0].innerText
+        const match = desc.match(/src=["|'](.+?[\.jpg|\.gif|\.png|\.jpeg])["|']/i)
+        if (match) {
+            return match[1]
+        }
+
+        return null
+    }
 
     getItemAuthors = (node) => {
         const authors = Utils.getChildElements(node, 'author');
@@ -123,6 +148,7 @@ export class AtomParser {
         }));
     };
 
+
     mapChannelFields = (document) => {
         const channelNodes = Utils.getElements(document, 'feed');
 
@@ -159,7 +185,6 @@ export class AtomParser {
             categories: this.getItemCategories(item),
             published: this.getItemPublished(item),
             enclosures: this.getItemEnclosures(item),
-            image: null
         }));
     };
 
